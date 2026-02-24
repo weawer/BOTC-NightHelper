@@ -13,11 +13,8 @@ function App() {
       <header className="section card">
         <div className="row tight">
           <div>
-            <h1>Blood on the Clocktower — Night Helper Wizard</h1>
-            <p className="muted">
-              Step 1: Script • Step 2: Select Characters • Step 3: Assign Roles
-              • Step 4: Night
-            </p>
+            <h1>Night Helper</h1>
+            <p className="muted"></p>
           </div>
           <button
             type="button"
@@ -39,7 +36,7 @@ function App() {
         <StepCharacterSelection wizard={wizard} setup={setup} />
       )}
 
-      {wizard.wizardStep === 3 && (
+      {wizard.wizardStep === 3 && !setup.skipAssignments && (
         <StepRoleAssignment wizard={wizard} setup={setup} />
       )}
 

@@ -1,5 +1,5 @@
 function WizardStepsNav({ wizard }) {
-  const { wizardStep, setWizardStep, stepReady } = wizard;
+  const { wizardStep, setWizardStep, stepReady, skipAssignments } = wizard;
 
   return (
     <section className="section card">
@@ -22,8 +22,8 @@ function WizardStepsNav({ wizard }) {
         <button
           type="button"
           className={`wizard-step ${wizardStep === 3 ? "is-current" : ""}`}
-          onClick={() => setWizardStep(3)}
-          disabled={!stepReady[1] || !stepReady[2]}
+          onClick={() => setWizardStep(skipAssignments ? 4 : 3)}
+          disabled={skipAssignments || !stepReady[1] || !stepReady[2]}
         >
           3. Assign Roles
         </button>
@@ -31,7 +31,11 @@ function WizardStepsNav({ wizard }) {
           type="button"
           className={`wizard-step ${wizardStep === 4 ? "is-current" : ""}`}
           onClick={() => setWizardStep(4)}
-          disabled={!stepReady[1] || !stepReady[2] || !stepReady[3]}
+          disabled={
+            !stepReady[1] ||
+            !stepReady[2] ||
+            (!skipAssignments && !stepReady[3])
+          }
         >
           4. Start Night
         </button>

@@ -3,6 +3,8 @@ function StepCharacterSelection({ wizard, setup }) {
   const {
     categories,
     selectedCharacters,
+    skipAssignments,
+    applySkipAssignmentsFromSelectedCharacters,
     toggleCharacterInGame,
     quickFillRecommendedCharacters,
     drunkExtraTownsfolk,
@@ -136,10 +138,20 @@ function StepCharacterSelection({ wizard, setup }) {
         <button
           type="button"
           className="btn primary"
-          onClick={() => setWizardStep(3)}
+          onClick={() => {
+            if (skipAssignments) {
+              applySkipAssignmentsFromSelectedCharacters();
+              setWizardStep(4);
+              return;
+            }
+
+            setWizardStep(3);
+          }}
           disabled={!stepReady[2]}
         >
-          Continue to Role Assignment
+          {skipAssignments
+            ? "Continue to Night"
+            : "Continue to Role Assignment"}
         </button>
       </div>
     </section>

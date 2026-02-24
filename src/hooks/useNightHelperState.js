@@ -14,6 +14,15 @@ const createPlayer = (id, name) => ({
   isPoisoned: false,
 });
 
+const createRoleNamedPlayer = (id, role) => ({
+  id,
+  name: role,
+  character: role,
+  isAlive: true,
+  isDrunk: false,
+  isPoisoned: false,
+});
+
 const createDefaultPlayers = (count = 8) =>
   Array.from({ length: count }, (_, index) => createPlayer(index + 1));
 
@@ -166,6 +175,7 @@ const buildInitialState = () => {
       typeof persisted?.selectedScriptId === "string"
         ? persisted.selectedScriptId
         : "",
+    skipAssignments: Boolean(persisted?.skipAssignments),
     playerCount,
     selectedCharacters: Array.isArray(persisted?.selectedCharacters)
       ? persisted.selectedCharacters.filter((item) => typeof item === "string")
@@ -215,6 +225,9 @@ function useNightHelperState() {
   const [wizardStep, setWizardStep] = useState(initialState.wizardStep);
   const [selectedScriptId, setSelectedScriptId] = useState(
     initialState.selectedScriptId,
+  );
+  const [skipAssignments, setSkipAssignments] = useState(
+    initialState.skipAssignments,
   );
   const [playerCount, setPlayerCount] = useState(initialState.playerCount);
   const [selectedCharacters, setSelectedCharacters] = useState(
@@ -326,6 +339,17 @@ function useNightHelperState() {
 
         return createPlayer(index + 1, defaultPlayerName(index));
       }),
+    );
+  };
+
+  const applySkipAssignmentsFromSelectedCharacters = () => {
+    const roles = selectedCharacters.slice(0, playerCount);
+    if (roles.length === 0) {
+      return;
+    }
+
+    setPlayers(
+      roles.map((role, index) => createRoleNamedPlayer(index + 1, role)),
     );
   };
 
@@ -676,7 +700,7 @@ function useNightHelperState() {
           selectedByCategory.outsider === expectedSetup.outsider &&
           selectedByCategory.minion === expectedSetup.minion &&
           selectedByCategory.imp === expectedSetup.imp)),
-    3: players.every((player) => Boolean(player.character)),
+    3: skipAssignments || players.every((player) => Boolean(player.character)),
   };
 
   const roleCountLabel = (name, selected, expected) =>
@@ -703,6 +727,7 @@ function useNightHelperState() {
     const stateToPersist = {
       wizardStep,
       selectedScriptId,
+      skipAssignments,
       playerCount,
       selectedCharacters,
       drunkExtraTownsfolk,
@@ -726,6 +751,7 @@ function useNightHelperState() {
   }, [
     wizardStep,
     selectedScriptId,
+    skipAssignments,
     playerCount,
     selectedCharacters,
     drunkExtraTownsfolk,
@@ -747,6 +773,7 @@ function useNightHelperState() {
 
     setWizardStep(1);
     setSelectedScriptId("");
+    setSkipAssignments(false);
     setPlayerCount(8);
     setSelectedCharacters([]);
     setDrunkExtraTownsfolk("");
@@ -764,9 +791,23 @@ function useNightHelperState() {
     deleteCookie(COOKIE_NAME);
   };
 
+  const navigateWizardStep = (nextStep) => {
+    if (skipAssignments && nextStep === 3) {
+      setWizardStep(4);
+      return;
+    }
+
+    if (skipAssignments && nextStep === 4) {
+      applySkipAssignmentsFromSelectedCharacters();
+    }
+
+    setWizardStep(nextStep);
+  };
+
   const wizard = {
     wizardStep,
-    setWizardStep,
+    setWizardStep: navigateWizardStep,
+    skipAssignments,
     stepReady,
     resetGame,
   };
@@ -775,6 +816,8 @@ function useNightHelperState() {
     selectedScript,
     selectedScriptId,
     setSelectedScriptId,
+    skipAssignments,
+    setSkipAssignments,
     playerCount,
     applyPlayerCount,
     selectedCharacters,
@@ -793,6 +836,7 @@ function useNightHelperState() {
     removeSavedPlayerNames,
     addSavedPlayersToSession,
     fillWithDefaultPlayers,
+    applySkipAssignmentsFromSelectedCharacters,
     players,
     setPlayers,
     addPlayer,

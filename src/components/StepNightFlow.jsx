@@ -27,6 +27,22 @@ function StepNightFlow({ nightFlow }) {
     return roleLabel;
   };
 
+  const formatPlayerDisplayLabel = (player, includeLifeState = false) => {
+    const playerName =
+      typeof player.name === "string" ? player.name.trim() : "";
+    const roleLabel = formatPlayerRoleLabel(player);
+    const baseLabel =
+      playerName && playerName !== roleLabel
+        ? `${playerName} — ${roleLabel}`
+        : roleLabel;
+
+    if (!includeLifeState) {
+      return baseLabel;
+    }
+
+    return `${baseLabel} (${player.isAlive ? "Alive" : "Dead"})`;
+  };
+
   return (
     <>
       <section className="section card">
@@ -90,8 +106,7 @@ function StepNightFlow({ nightFlow }) {
               <option value="">No kill recorded</option>
               {players.map((player) => (
                 <option key={player.id} value={player.id}>
-                  {player.name} — {formatPlayerRoleLabel(player)} (
-                  {player.isAlive ? "Alive" : "Dead"})
+                  {formatPlayerDisplayLabel(player, true)}
                 </option>
               ))}
             </select>
@@ -113,7 +128,7 @@ function StepNightFlow({ nightFlow }) {
               <option value="">No protection recorded</option>
               {players.map((player) => (
                 <option key={player.id} value={player.id}>
-                  {player.name} — {formatPlayerRoleLabel(player)}
+                  {formatPlayerDisplayLabel(player)}
                 </option>
               ))}
             </select>
@@ -147,9 +162,7 @@ function StepNightFlow({ nightFlow }) {
           {players.map((player) => (
             <article key={player.id} className="player-card compact">
               <div className="row tight">
-                <strong>
-                  {player.name} — {formatPlayerRoleLabel(player)}
-                </strong>
+                <strong>{formatPlayerDisplayLabel(player)}</strong>
                 <span className={player.isAlive ? "alive" : "dead"}>
                   {player.isAlive ? "Alive" : "Dead"}
                 </span>

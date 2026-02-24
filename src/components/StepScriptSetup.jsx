@@ -10,6 +10,8 @@ function StepScriptSetup({ wizard, setup }) {
     setSelectedScriptId,
     setSelectedCharacters,
     setPlayers,
+    skipAssignments,
+    setSkipAssignments,
     playerCount,
     applyPlayerCount,
     savedPlayerNames,
@@ -107,6 +109,15 @@ function StepScriptSetup({ wizard, setup }) {
               );
             })}
           </select>
+        </label>
+
+        <label className="check-item">
+          <input
+            type="checkbox"
+            checked={skipAssignments}
+            onChange={(event) => setSkipAssignments(event.target.checked)}
+          />
+          <span>Skip names and role assignment (jump to night)</span>
         </label>
       </div>
 
