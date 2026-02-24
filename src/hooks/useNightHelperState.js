@@ -175,7 +175,10 @@ const buildInitialState = () => {
       typeof persisted?.selectedScriptId === "string"
         ? persisted.selectedScriptId
         : "",
-    skipAssignments: Boolean(persisted?.skipAssignments),
+    skipAssignments:
+      typeof persisted?.skipAssignments === "boolean"
+        ? persisted.skipAssignments
+        : true,
     playerCount,
     selectedCharacters: Array.isArray(persisted?.selectedCharacters)
       ? persisted.selectedCharacters.filter((item) => typeof item === "string")
@@ -773,7 +776,7 @@ function useNightHelperState() {
 
     setWizardStep(1);
     setSelectedScriptId("");
-    setSkipAssignments(false);
+    setSkipAssignments(true);
     setPlayerCount(8);
     setSelectedCharacters([]);
     setDrunkExtraTownsfolk("");

@@ -66,7 +66,7 @@ function StepScriptSetup({ wizard, setup }) {
   };
 
   return (
-    <section className="section card">
+    <section className="section card step-script-setup">
       <h2>Step 1 — Choose Script</h2>
       <div className="setup-grid">
         <label>
@@ -93,98 +93,108 @@ function StepScriptSetup({ wizard, setup }) {
 
         <label>
           Number of players
-          <select
-            className="text-input"
-            value={playerCount}
-            onChange={(event) =>
-              applyPlayerCount(Number(event.target.value || 0))
-            }
-          >
-            {Array.from({ length: 11 }, (_, index) => {
-              const value = index + 5;
-              return (
-                <option key={value} value={value}>
-                  {value}
-                </option>
-              );
-            })}
-          </select>
+          <div className="row" style={{ justifyContent: "flex-start" }}>
+            <button
+              type="button"
+              className="btn"
+              onClick={() => applyPlayerCount(playerCount - 1)}
+              disabled={playerCount <= 5}
+            >
+              -
+            </button>
+            <strong
+              className="player-count-value"
+              style={{ minWidth: "2.2rem", textAlign: "center" }}
+            >
+              {playerCount}
+            </strong>
+            <button
+              type="button"
+              className="btn"
+              onClick={() => applyPlayerCount(playerCount + 1)}
+              disabled={playerCount >= 15}
+            >
+              +
+            </button>
+          </div>
         </label>
 
         <label className="check-item">
           <input
             type="checkbox"
-            checked={skipAssignments}
-            onChange={(event) => setSkipAssignments(event.target.checked)}
+            checked={!skipAssignments}
+            onChange={(event) => setSkipAssignments(!event.target.checked)}
           />
-          <span>Skip names and role assignment (jump to night)</span>
+          <span>Use names and role assignment</span>
         </label>
       </div>
 
-      <section className="count-reminders" style={{ marginTop: "0.8rem" }}>
-        <p className="muted">
-          Add saved player names to memory for future games.
-        </p>
+      {!skipAssignments && (
+        <section className="count-reminders" style={{ marginTop: "0.8rem" }}>
+          <p className="muted">
+            Add saved player names to memory for future games.
+          </p>
 
-        <div className="row">
-          <label style={{ flex: 1, minWidth: "220px" }}>
-            Saved player name
-            <input
-              type="text"
-              className="text-input"
-              value={newSavedPlayerName}
-              onChange={(event) => setNewSavedPlayerName(event.target.value)}
-              placeholder="Enter player name"
-            />
-          </label>
+          <div className="row">
+            <label style={{ flex: 1, minWidth: "220px" }}>
+              Saved player name
+              <input
+                type="text"
+                className="text-input"
+                value={newSavedPlayerName}
+                onChange={(event) => setNewSavedPlayerName(event.target.value)}
+                placeholder="Enter player name"
+              />
+            </label>
 
-          <button
-            type="button"
-            className="btn"
-            onClick={onAddSavedPlayerName}
-            disabled={!newSavedPlayerName.trim()}
-          >
-            Add Saved Player
-          </button>
-        </div>
-
-        {availableSavedNames.length > 0 && (
-          <div className="checkbox-grid">
-            {availableSavedNames.map((name) => (
-              <label key={name} className="check-item">
-                <input
-                  type="checkbox"
-                  checked={checkedSavedNames.includes(name)}
-                  onChange={() => toggleCheckedSavedName(name)}
-                />
-                <span>{name}</span>
-              </label>
-            ))}
-          </div>
-        )}
-
-        {availableSavedNames.length > 0 && (
-          <div className="row" style={{ marginTop: "0.6rem" }}>
             <button
               type="button"
               className="btn"
-              onClick={fillWithDefaultPlayers}
+              onClick={onAddSavedPlayerName}
+              disabled={!newSavedPlayerName.trim()}
             >
-              Clear
-            </button>
-            <button
-              type="button"
-              className="btn danger-toggle"
-              onClick={onRemoveCheckedFromMemory}
-              disabled={checkedSavedNames.length === 0}
-            >
-              Remove Checked Names from Memory
+              Add Saved Player
             </button>
           </div>
-        )}
-      </section>
 
-      {availableSavedNames.length === 0 && (
+          {availableSavedNames.length > 0 && (
+            <div className="checkbox-grid">
+              {availableSavedNames.map((name) => (
+                <label key={name} className="check-item">
+                  <input
+                    type="checkbox"
+                    checked={checkedSavedNames.includes(name)}
+                    onChange={() => toggleCheckedSavedName(name)}
+                  />
+                  <span>{name}</span>
+                </label>
+              ))}
+            </div>
+          )}
+
+          {availableSavedNames.length > 0 && (
+            <div className="row" style={{ marginTop: "0.6rem" }}>
+              <button
+                type="button"
+                className="btn"
+                onClick={fillWithDefaultPlayers}
+              >
+                Clear
+              </button>
+              <button
+                type="button"
+                className="btn danger-toggle"
+                onClick={onRemoveCheckedFromMemory}
+                disabled={checkedSavedNames.length === 0}
+              >
+                Remove Checked Names from Memory
+              </button>
+            </div>
+          )}
+        </section>
+      )}
+
+      {!skipAssignments && availableSavedNames.length === 0 && (
         <p className="muted" style={{ marginTop: "0.6rem" }}>
           No saved players yet.
         </p>

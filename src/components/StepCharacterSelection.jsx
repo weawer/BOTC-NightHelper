@@ -41,24 +41,9 @@ function StepCharacterSelection({ wizard, setup }) {
     );
   };
 
-  const selectedSummary = selectedCharacters.length > 0 && (
-    <div className="selected-list">
-      {selectedCharacters.map((character) => (
-        <button
-          key={character}
-          type="button"
-          className="selected-pill"
-          onClick={() => toggleCharacterInGame(character)}
-        >
-          {character} ×
-        </button>
-      ))}
-    </div>
-  );
-
   return (
     <section className="section card">
-      <h2>Step 2 — Select Characters (No Assignment Yet)</h2>
+      <h2>Step 2 — Build the bag</h2>
 
       <div className="count-reminders">
         <p className="muted">
@@ -120,8 +105,6 @@ function StepCharacterSelection({ wizard, setup }) {
             </select>
           </label>
         )}
-
-        {selectedSummary}
       </div>
 
       <div className="role-groups">

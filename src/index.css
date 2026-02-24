@@ -353,6 +353,11 @@ label {
   gap: 0.65rem;
 }
 
+.step-script-setup .player-count-value {
+  font-size: 1.5rem;
+  line-height: 1.8;
+}
+
 @media (min-width: 740px) {
   .wizard-row {
     grid-template-columns: repeat(4, minmax(0, 1fr));
