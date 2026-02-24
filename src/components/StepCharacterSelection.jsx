@@ -6,7 +6,6 @@ function StepCharacterSelection({ wizard, setup }) {
     skipAssignments,
     applySkipAssignmentsFromSelectedCharacters,
     toggleCharacterInGame,
-    quickFillRecommendedCharacters,
     drunkExtraTownsfolk,
     setDrunkExtraTownsfolk,
     selectedByCategory,
@@ -43,7 +42,8 @@ function StepCharacterSelection({ wizard, setup }) {
 
   const drunkExtraTownsfolkOptions = (categories.townsfolk ?? []).filter(
     (character) =>
-      !selectedCharacters.includes(character) || character === drunkExtraTownsfolk,
+      !selectedCharacters.includes(character) ||
+      character === drunkExtraTownsfolk,
   );
 
   return (
@@ -54,16 +54,6 @@ function StepCharacterSelection({ wizard, setup }) {
         <p className="muted">
           Selected {selectedCharacters.length}/{playerCount} characters.
         </p>
-        <div className="row">
-          <button
-            type="button"
-            className="btn"
-            onClick={quickFillRecommendedCharacters}
-            disabled={!expectedSetup}
-          >
-            Quick Fill Recommended
-          </button>
-        </div>
         {expectedSetup && (
           <div className="count-grid">
             <p>
