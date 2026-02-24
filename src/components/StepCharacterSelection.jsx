@@ -41,6 +41,11 @@ function StepCharacterSelection({ wizard, setup }) {
     );
   };
 
+  const drunkExtraTownsfolkOptions = (categories.townsfolk ?? []).filter(
+    (character) =>
+      !selectedCharacters.includes(character) || character === drunkExtraTownsfolk,
+  );
+
   return (
     <section className="section card">
       <h2>Step 2 — Build the bag</h2>
@@ -97,7 +102,7 @@ function StepCharacterSelection({ wizard, setup }) {
               onChange={(event) => setDrunkExtraTownsfolk(event.target.value)}
             >
               <option value="">Select Townsfolk</option>
-              {categories.townsfolk.map((character) => (
+              {drunkExtraTownsfolkOptions.map((character) => (
                 <option key={character} value={character}>
                   {character}
                 </option>
